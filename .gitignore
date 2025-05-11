@@ -1,3 +1,6 @@
+# Ignore admin accounts text
+admin_account.txt
+
 # Ignore Composer's vendor directory
 /vendor/
 
