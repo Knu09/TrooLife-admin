@@ -1,10 +1,17 @@
 <?php session_start();
+
+require_once 'internal/user_management.php';
+$conn = require 'internal/db_connection.php';
+
 if (!isset($_SESSION['admin_id'])) {
     header('Location: ../pages/login.php');
     exit;
 }
 
-$fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name']
+$sql = "SELECT user_id, username, email, first_name, last_name, date_created, is_active FROM users";
+$result = $conn->query($sql);
+
+$fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
 
 ?>
 <!doctype html>
@@ -286,54 +293,40 @@ $fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name']
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
                         <!-- Item -->
                         <tr class="vertical-align-middle">
                             <td>
-                                <a href="#" class="fw-bold"> 456478 </a>
+                                <a href="#" class="fw-bold"><?= $row['user_id'] ?></a>
                             </td>
                             <td>
-                                <span class="fw-normal">Christ123</span>
+                                <span class="fw-normal"><?= $row['username'] ?></span>
                             </td>
                             <td>
                                 <span class="fw-normal"
-                                    >christdelatorre123@gmail.com</span
+                                    ><?= $row['email'] ?></span
                                 >
                             </td>
-                            <td><span class="fw-normal">Christ</span></td>
-                            <td><span class="fw-normal">Dela Torre</span></td>
+                            <td><span class="fw-normal"><?= $row['first_name'] ?></span></td>
+                            <td><span class="fw-normal"><?= $row['last_name'] ?></span></td>
                             <td>
-                                <span class="fw-normal">2025-04-18</span>
+                                <span class="fw-normal"><?= $row['date_created'] ?></span>
                             </td>
                             <td>
-                                <a class="btn btn-danger" href="#"
-                                    ><span class="fas fa-trash-alt"></span
-                                    >Deactivate</a
-                                >
+                                <?php if ($row['is_active']): ?>
+                                <a class="btn btn-danger" href="internal/user_management.php?user_id=<?= $row['user_id'] ?>&action=deactivate">
+                                    <span class="fas fa-trash-alt">Deactivate</span
+                                    >
+                                </a>
+                                <?php else: ?>
+                                    <a class="btn btn-success" href="internal/user_management.php?user_id=<?= $row['user_id'] ?>&action=reactivate">
+                                        <span class="fas fa-trash-alt">Reactivate</span
+                                        >
+                                    </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
-                        <!-- Item -->
-                        <tr class="vertical-align-middle">
-                            <td>
-                                <a href="#" class="fw-bold"> 456423 </a>
-                            </td>
-                            <td>
-                                <span class="fw-normal">Test123</span>
-                            </td>
-                            <td>
-                                <span class="fw-normal">test123@gmail.com</span>
-                            </td>
-                            <td><span class="fw-normal">test</span></td>
-                            <td><span class="fw-normal">123</span></td>
-                            <td>
-                                <span class="fw-normal">2025-04-17</span>
-                            </td>
-                            <td>
-                                <a class="btn btn-success" href="#"
-                                    ><span class="fas fa-trash-alt"></span
-                                    >Reactivate</a
-                                >
-                            </td>
-                        </tr>
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
                 <div
