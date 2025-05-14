@@ -178,7 +178,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="add_accounts.php">
+                            <a class="nav-link" href="../pages/add_accounts.php">
                                 <span class="sidebar-text"
                                     >Add Accounts</span
                                 >
