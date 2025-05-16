@@ -171,7 +171,7 @@
                 >
                     <ul class="flex-column nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="admin_account.php">
+                            <a class="nav-link" href="../pages/admin_accounts.php">
                                 <span class="sidebar-text"
                                     >Accounts</span
                                 >
