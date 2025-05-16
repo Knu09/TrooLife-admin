@@ -1,22 +1,35 @@
 <?php session_start();
+
+$conn = require '../internal/db_connection.php';
+
 if (!isset($_SESSION['admin_id'])) {
     header('Location: ../pages/login.php');
     exit;
 }
 
-$fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name']
+$sql = "SELECT admin_id, username, email, first_name, last_name, date_created FROM admins";
+$result = $conn->query($sql);
+
+$fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
 
 ?>
 <!doctype html>
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Add Admin</title>
+        <title>Admin Management</title>
+
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <meta name="title" content="Dashboard - User Management" />
+
+        <!-- FONT AWESOME KIT -->
+        <script
+            defer
+            src="https://kit.fontawesome.com/9716cd5b9f.js"
+            crossorigin="anonymous"></script>
 
         <!-- Favicon -->
         <link
@@ -185,62 +198,175 @@ $fullname = $_SESSION['first_name'] . ' ' . $_SESSION['last_name']
                     </div>
                 </div>
             </nav>
-            <div class="card card-body border-0 shadow my-4">
-                <h2 class="h5 mb-4">Create new administrator</h2>
-                <form action="add_accounts.php" method="POST" autocomplete="off">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div>
-                                <label for="first_name">First Name</label>
-                                <input class="form-control" id="first_name" name="first_name" type="text" placeholder="Enter a first name" required>
-                            </div>
+            <div class="table-settings my-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col col-md-6 col-lg-3 col-xl-4">
+                        <div class="input-group me-2 me-lg-3 fmxw-400">
+                            <span class="input-group-text">
+                                <svg
+                                    class="icon icon-xs"
+                                    x-description="Heroicon name: solid/search"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd"
+                                    ></path>
+                                </svg>
+                            </span>
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Search admins"
+                            />
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div>
-                                <label for="last_name">Last Name</label>
-                                <input class="form-control" id="last_name" name="last_name" type="text" placeholder="Enter a last name" required>
+                    </div>
+                    <div class="col-4 col-md-2 col-xl-1 ps-md-0 text-end">
+                        <div class="dropdown">
+                            <button
+                                class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                <svg
+                                    class="icon icon-sm"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                        clip-rule="evenodd"
+                                    ></path>
+                                </svg>
+                                <span class="visually-hidden"
+                                    >Toggle Dropdown</span
+                                >
+                            </button>
+                            <div
+                                class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0"
+                            >
+                                <span class="small ps-3 fw-bold text-dark"
+                                    >Show</span
+                                >
+                                <a
+                                    class="dropdown-item d-flex align-items-center fw-bold"
+                                    href="#"
+                                    >10
+                                    <svg
+                                        class="icon icon-xxs ms-auto"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"
+                                        ></path></svg
+                                ></a>
+                                <a class="dropdown-item fw-bold" href="#">20</a>
+                                <a
+                                    class="dropdown-item fw-bold rounded-bottom"
+                                    href="#"
+                                    >30</a
+                                >
                             </div>
                         </div>
                     </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3">
-                            <label for="birthday">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <svg class="icon icon-xs" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z"/></svg>
-                                </span>
-                                <input class="form-control" id="password" name="password" type="password" placeholder="Enter a secure password" autocomplete="new-password" required>
-                                </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="birthday">Confirm Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <svg class="icon icon-xs" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z"/></svg>
-                                </span>
-                                <input class="form-control" id="confirm_password" name="confirm_password" type="confirm_password" placeholder="Confirm the password" required>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input class="form-control" id="email" type="email" name="email" placeholder="name@company.com" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="phone">Username</label>
-                                <input class="form-control" id="username" type="text" name="username" placeholder="example123" autocomplete="chrome-off" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Create</button>
-                    </div>
-                </form>
+                </div>
             </div>
+            <div
+                class="card card-body border-0 shadow table-wrapper table-responsive"
+            >
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="border-gray-200">#</th>
+                            <th class="border-gray-200">Username</th>
+                            <th class="border-gray-200">Email</th>
+                            <th class="border-gray-200">First Name</th>
+                            <th class="border-gray-200">Last Name</th>
+                            <th class="border-gray-200">Date Created</th>
+                            <th class="border-gray-200">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <!-- Item -->
+                        <tr class="vertical-align-middle">
+                            <td>
+                                <a href="#" class="fw-bold"><?= $row['admin_id'] ?></a>
+                            </td>
+                            <td>
+                                <span class="fw-normal"><?= $row['username'] ?></span>
+                            </td>
+                            <td>
+                                <span class="fw-normal"
+                                    ><?= $row['email'] ?></span
+                                >
+                            </td>
+                            <td><span class="fw-normal"><?= $row['first_name'] ?></span></td>
+                            <td><span class="fw-normal"><?= $row['last_name'] ?></span></td>
+                            <td>
+                                <span class="fw-normal"><?= $row['date_created'] ?></span>
+                            </td>
+                            <td>
+                                <a class="" href="internal/user_management.php?user_id=<?= $row['user_id'] ?>&action=deactivate">
+
+                                </a>
+                                <!-- Button Modal -->
+                                <button type="button" class="border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#modal-form">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <?php
+                                    require '../components/edit_modal.php';
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+                <div
+                    class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between"
+                >
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination mb-0">
+                            <li class="page-item">
+                                <a class="page-link" href="#">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">4</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">5</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="fw-normal small mt-4 mt-lg-0">
+                        Showing <b>5</b> out of <b>25</b> entries
+                    </div>
+                </div>
+            </div>
+
             <!-- Footer Start -->
             <?php
                 require '../components/footer.php';
