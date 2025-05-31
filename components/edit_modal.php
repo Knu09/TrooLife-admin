@@ -1,3 +1,6 @@
+<?php
+// require '../internal/modify_admin_server.php';
+?>
 <!-- Modal Content -->
 <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -8,8 +11,9 @@
                     <div class="text-center text-md-center mb-4 mt-md-0">
                         <h1 class="mb-0 h4">Change Admin Password</h1>
                     </div>
-                    <form action="#" class="mt-4" autocomplete="off">
+                    <form action="../pages/admin_accounts.php" method="POST" class="mt-4" autocomplete="off">
                         <!-- Form -->
+                        <input type="hidden" name="admin_id" value="<?= htmlspecialchars($row['admin_id']) ?>">
                         <div class="form-group mb-4">
                             <label for="current-password">Current Password</label>
                             <div class="input-group">
@@ -22,7 +26,7 @@
                                     </svg>
                                 </span>
                                 <input type="password" placeholder="Current password" class="form-control" name="current-password" id="current-password"
-                                    required autocomplete="nope">
+                                    autocomplete="nope">
                             </div>
                         </div>
                         <!-- End of Form -->
@@ -39,7 +43,7 @@
                                                 clip-rule="evenodd"></path>
                                         </svg>
                                     </span>
-                                    <input type="password" placeholder="New password" class="form-control" name="new-password" id="new-password"  autocomplete="nope"
+                                    <input type="password" placeholder="New password" class="form-control" name="new-password" id="new-password" autocomplete="nope"
                                         required>
                                 </div>
                             </div>
@@ -56,7 +60,7 @@
                                                 clip-rule="evenodd"></path>
                                         </svg>
                                     </span>
-                                    <input type="password" placeholder="Confirm password" class="form-control" name="confirm-password" id="confirm-password"  autocomplete="nope"
+                                    <input type="password" placeholder="Confirm password" class="form-control" name="confirm-password" id="confirm-password" autocomplete="nope"
                                         required>
                                 </div>
                             </div>
