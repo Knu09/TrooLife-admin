@@ -4,7 +4,7 @@ function addAdmin(array $admin_data): bool
     $conn = require 'db_connection.php';
     $required_fields = ['username', 'password', 'confirm_password', 'email', 'first_name', 'last_name'];
     if ($admin_data['password'] !== $admin_data['confirm_password']) {
-        $_SESSOIN['form_errors']['confirm_password'] = "Password does not match!";
+        $_SESSION['form_errors']['confirm_password'] = "Password does not match!";
         return false;
     }
 
@@ -16,7 +16,7 @@ function addAdmin(array $admin_data): bool
     $check_stmt->execute();
     $check_stmt->store_result();
 
-    if ($check_stmt->num_row > 0) {
+    if ($check_stmt->num_rows > 0) {
         $_SESSION['form_errors']['email'] = "Email or Username already exists";
         $check_stmt->close();
         return false;
@@ -42,8 +42,18 @@ function addAdmin(array $admin_data): bool
         $hashed_password,
         $admin_data['first_name'],
         $admin_data['last_name'],
-        $admin_data['date_created']
+        $date_now
     );
+
+    if (!$stmt->execute()) { // Consistent OOP style
+        error_log("Execute failed: " . $stmt->error);
+        $_SESSION['form_errors']['system'] = "Database error";
+        $stmt->close();
+        return false;
+    }
+
+    $stmt->close();
+    return true;
 
     return true;
 }
